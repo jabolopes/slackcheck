@@ -1,4 +1,6 @@
 #!/bin/bash
+#
+# Runs GRUB (after a kernel update) with the default config.
 
 set -e
 

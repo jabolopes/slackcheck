@@ -1,0 +1,29 @@
+#!/bin/sh
+#
+# Checks Slackware updates and informs the user via Desktop
+# notifications.
+
+# 'notify-send' timeout in milliseconds
+readonly TIMEOUT=5000
+
+# Wait for network connectivity
+sleep 5s
+
+# Check if a mirror is set.
+readonly MIRROR=$(grep -v "#" /etc/slackpkg/mirrors | cut -d "/" -f 3)
+
+if [[ -z "${MIRROR}" ]]; then
+  /usr/bin/notify-send -t "${TIMEOUT}" "You need to select a slackpkg mirror"
+  exit
+fi
+
+if ! ping -c 1 "${MIRROR}" 2>&1 > /dev/null; then
+  /usr/bin/notify-send -t "${TIMEOUT}" "Unable to check updates"
+  exit
+fi
+
+readonly MSG=$(/usr/sbin/slackpkg check-updates | grep -i news)
+
+if [[ -n "${MSG}" ]]; then
+  /usr/bin/notify-send -t "${TIMEOUT}" "${MSG}"
+fi

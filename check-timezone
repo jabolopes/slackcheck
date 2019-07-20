@@ -1,0 +1,34 @@
+#!/bin/sh
+#
+# Checks and updates the timezone based on the IP address.
+
+set -e
+
+# 'notify-send' timeout in milliseconds
+TIMEOUT=5000
+
+# Timezone files.
+TIMEZONE_PT="/usr/share/zoneinfo/Europe/Lisbon"
+TIMEZONE_DE="/usr/share/zoneinfo/Europe/Berlin"
+
+# Timezone IPs.
+IP_PT=77
+IP_DE=88
+
+# Wait for network connectivity
+sleep 5s
+
+ROUTER_IP=$(dig +short myip.opendns.com @resolver1.opendns.com)
+FIRST_WORD=$(echo $ROUTER_IP | cut -d "." -f 1)
+
+if [[ "$FIRST_WORD" = "$IP_PT" ]]
+then
+  cp $TIMEZONE_PT /etc/localtime
+  /usr/bin/notify-send -t $TIMEOUT "Timezone set to PT"
+elif [[ "$FIRST_WORD" = "$IP_DE" ]]
+then
+  cp $TIMEZONE_DE /etc/localtime
+  /usr/bin/notify-send -t $TIMEOUT "Timezone set to DE"
+else
+  /usr/bin/notify-send -t $TIMEOUT "Unable to determine timezone"
+fi

@@ -1,0 +1,7 @@
+#!/bin/bash
+#
+# Sets HDMI left of the main monitor.
+
+set -e
+
+xrandr --output HDMI1 --mode 1920x1080 --left-of LVDS1

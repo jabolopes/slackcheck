@@ -1,0 +1,12 @@
+#!/bin/bash
+#
+# Configures the Bamboo tablet.
+
+set -e
+
+# Rotate stylus and eraser.
+xsetwacom set "Wacom BambooPT 2FG 4x5 Pen stylus" rotate HALF
+xsetwacom set "Wacom BambooPT 2FG 4x5 Pen eraser" rotate HALF
+
+# Disable touch
+xsetwacom set "Wacom BambooPT 2FG 4x5 Pad pad" touch off

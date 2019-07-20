@@ -1,0 +1,11 @@
+#!/bin/bash
+#
+# Configures NetworkManager's active connection to register the
+# hostname with DHCP over IPv4.
+
+set -e
+
+readonly HOSTNAME=$(cat /etc/HOSTNAME)
+readonly CONNECTION=$(nmcli -t -f NAME c show --active)
+
+sudo nmcli con modify "${CONNECTION}" ipv4.dhcp-hostname "${HOSTNAME}"

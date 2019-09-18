@@ -5,7 +5,10 @@
 
 set -e
 
-readonly HOSTNAME=$(cat /etc/HOSTNAME)
+readonly HOSTNAME=$(hostname)
 readonly CONNECTION=$(nmcli -t -f NAME c show --active)
 
+sudo nmcli con modify "${CONNECTION}" ipv4.dhcp-send-hostname yes
 sudo nmcli con modify "${CONNECTION}" ipv4.dhcp-hostname "${HOSTNAME}"
+sudo nmcli con modify "${CONNECTION}" ipv6.dhcp-send-hostname yes
+sudo nmcli con modify "${CONNECTION}" ipv6.dhcp-hostname "${HOSTNAME}"

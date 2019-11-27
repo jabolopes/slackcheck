@@ -2,6 +2,16 @@
 #
 # Checks Slackware updates and informs the user via Desktop
 # notifications.
+#
+# If this is run as a non-root user, it checks the updates and informs
+# the user via Desktop notifications whether there are news or not.
+#
+# If this is run as root, it updates the package list(s) and informs
+# the user via Desktop notifications what are the package upgrades (if
+# any). This can be installed as a daily cron job by running the
+# following as root:
+#
+#   $ cp check-updates /etc/cron.daily
 
 # 'notify-send' timeout in milliseconds
 readonly TIMEOUT=5000
@@ -22,8 +32,33 @@ if ! ping -c 1 "${MIRROR}" 2>&1 > /dev/null; then
   exit
 fi
 
-readonly MSG=$(/usr/sbin/slackpkg check-updates | grep -i news)
+if [[ $(id -u) == 0 ]]; then
+  # Root can update the list of packages and display the upgrades.
 
-if [[ -n "${MSG}" ]]; then
-  /usr/bin/notify-send -t "${TIMEOUT}" "${MSG}"
+  # Update package lists only if there are news in the changelog.
+  /usr/sbin/slackpkg -dialog=off -batch=on -default_answer=n update
+
+  # Get list of package upgrades in the format [repository]package
+  UPGRADES=$(/usr/sbin/slackpkg -dialog=off -batch=on -default_answer=n upgrade-all | \
+               grep -E -e ".+\.t.z" | \
+               sed -e 's,  *, ,g' | \
+               sed -e 's, ,[,' | \
+               sed -e 's, ,],' | \
+               tr -d ' ' | \
+               sed -e 's,\.t.z,,')
+
+  if [[ -n "${UPGRADES}" ]]; then
+    UPGRADES="Package upgrades: ${UPGRADES}"
+    /usr/bin/notify-send -t "${TIMEOUT}" "${UPGRADES}"
+  else
+    /usr/bin/notify-send -t "${TIMEOUT}" "All up-to-date"
+  fi
+else
+  # Non-root can only display whether there are news or not.
+
+  readonly MSG=$(/usr/sbin/slackpkg -dialog=off -batch=on check-updates | grep -i news)
+
+  if [[ -n "${MSG}" ]]; then
+    /usr/bin/notify-send -t "${TIMEOUT}" "${MSG}"
+  fi
 fi

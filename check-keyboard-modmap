@@ -1,0 +1,10 @@
+#!/bin/bash
+#
+# Sets keyboard modmap for the Apple keyboard.
+
+setxkbmap pt
+
+if [[ -e /sys/module/hid_apple ]]; then
+  xmodmap -e "keycode 49 = less greater less greater backslash notsign backslash notsign"
+  xmodmap -e "keycode 94 = backslash bar backslash bar notsign notsign notsign"
+fi

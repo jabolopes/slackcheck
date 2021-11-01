@@ -1,0 +1,7 @@
+#!/bin/bash
+#
+# Configures the external monitor (if present).
+
+if xrandr | grep -E -e "HDMI. connected"; then
+  xrandr --output eDP1 --off
+fi

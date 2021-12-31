@@ -10,3 +10,4 @@ xsetwacom set "Wacom BambooPT 2FG 4x5 Pen eraser" rotate HALF
 
 # Disable touch
 xsetwacom set "Wacom BambooPT 2FG 4x5 Pad pad" touch off
+xsetwacom --set 'Wacom BambooPT 2FG 4x5 Finger touch' touch off

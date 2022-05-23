@@ -2,6 +2,7 @@
 #
 # Configures the external monitor (if present).
 
-if xrandr | grep -E -e "HDMI. connected"; then
+if xrandr | grep -E -e "HDMI.+ connected"; then
   xrandr --output eDP1 --off
+  xrandr --output eDP-1-1 --off
 fi

@@ -8,8 +8,7 @@ guide](https://wiki.archlinux.org/title/NVIDIA_Optimus#Use_NVIDIA_graphics_only)
 1. Install the NVIDIA driver (and kernel module) from Slackbuilds.org
 2. Install the xf86-video-nouveau-blacklist. Can be done via `slackpkg`.
 3. Configure the NVIDIA card in the Xorg configuration.
-4. Configure the Xorg / NVIDIA driver via `~/.xinitrc`.
-5. Configure the KDE login manager (aka SDDM).
+4. Configure the KDE login manager (aka SDDM).
 
 ## Steps
 
@@ -49,15 +48,9 @@ Section "OutputClass"
 EndSection
 ```
 
-Configure `~/.xinitrc`:
-
-```shell
-$ xrandr --setprovideroutputsource modesetting NVIDIA-0
-$ xrandr --auto
-```
-
 Configure KDE login manager by editing the file
-`/usr/share/sddm/scripts/Xsetup`:
+`/usr/share/sddm/scripts/Xsetup` and adding the following commands to
+the top of the file.
 
 ```shell
 $ xrandr --setprovideroutputsource modesetting NVIDIA-0
